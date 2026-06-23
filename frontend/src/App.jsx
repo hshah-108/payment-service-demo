@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react";
 import { getPayments } from "./api/paymentApi";
 import PaymentForm from "./components/PaymentForm";
-import PaymentList from "./components/PaymentList";
-import "./style.css";
+import "./App.css";
 
-export default function App() {
+function App() {
   const [payments, setPayments] = useState([]);
 
   const loadPayments = async () => {
-    const response = await getPayments();
-    setPayments(response.data);
+    try {
+      const data = await getPayments();
+      setPayments(data);
+    } catch (error) {
+      console.error("Error loading payments:", error);
+    }
   };
 
   useEffect(() => {
@@ -17,11 +20,26 @@ export default function App() {
   }, []);
 
   return (
-    <main>
-      <h1>Simple Payment Service</h1>
-      <p>React frontend → FastAPI backend → SQLite database</p>
+    <div className="app">
+      <h1>Secure Digital Payment Service</h1>
+
       <PaymentForm onPaymentCreated={loadPayments} />
-      <PaymentList payments={payments} />
-    </main>
+
+      <h2>Payment History</h2>
+
+      {payments.length === 0 ? (
+        <p>No payments found.</p>
+      ) : (
+        <ul>
+          {payments.map((payment) => (
+            <li key={payment.id}>
+              ${payment.amount} - {payment.status}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }
+
+export default App;
