@@ -1,17 +1,21 @@
 import { useEffect, useState } from "react";
 import { getPayments } from "./api/paymentApi";
 import PaymentForm from "./components/PaymentForm";
-import "./App.css";
+import PaymentList from "./components/PaymentList";
+import "./style.css";
 
-function App() {
+export default function App() {
   const [payments, setPayments] = useState([]);
+  const [error, setError] = useState("");
 
   const loadPayments = async () => {
     try {
       const data = await getPayments();
-      setPayments(data);
-    } catch (error) {
-      console.error("Error loading payments:", error);
+      setPayments(Array.isArray(data) ? data : data?.data || []);
+    } catch (err) {
+      console.error("Failed to load payments:", err);
+      setError("Backend not connected, but UI is working.");
+      setPayments([]);
     }
   };
 
@@ -20,26 +24,14 @@ function App() {
   }, []);
 
   return (
-    <div className="app">
-      <h1>Secure Digital Payment Service</h1>
+    <main>
+      <h1>Simple Payment Service</h1>
+      <p>React frontend → FastAPI backend → SQLite database</p>
+
+      {error && <p style={{ color: "red" }}>{error}</p>}
 
       <PaymentForm onPaymentCreated={loadPayments} />
-
-      <h2>Payment History</h2>
-
-      {payments.length === 0 ? (
-        <p>No payments found.</p>
-      ) : (
-        <ul>
-          {payments.map((payment) => (
-            <li key={payment.id}>
-              ${payment.amount} - {payment.status}
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+      <PaymentList payments={payments} />
+    </main>
   );
 }
-
-export default App;
