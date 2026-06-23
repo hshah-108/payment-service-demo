@@ -1,0 +1,42 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+  margin: 0;
+}
+
+main {
+  max-width: 800px;
+  margin: 40px auto;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+input, button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  box-sizing: border-box;
+}
+
+button {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.payment {
+  display: grid;
+  grid-template-columns: 1fr 100px 100px;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.success { color: green; }
+.rejected { color: red; }
+.hint { color: #666; font-size: 14px; }
